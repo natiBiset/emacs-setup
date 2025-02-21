@@ -24,8 +24,7 @@
 #+end_src
 * sudo
 #+begin_src emacs-lisp
-  (use-package sudo-edit
-    :ensure t)
+  (use-package sudo-edit)
 
 #+end_src
 * edit(copy/paste)
@@ -37,7 +36,7 @@
 
   (global-set-key (kbd "C-c z") 'copy-line)
   (use-package undo-fu
-    :ensure t
+    
     :config
     (global-unset-key (kbd "C-z"))
     (global-set-key (kbd "C-z")   'undo-fu-only-undo)
@@ -46,7 +45,7 @@
 * powerline
 #+begin_src emacs-lisp
   (use-package powerline
-    :ensure t
+    
     :config (powerline-default-theme))
 #+end_src
 
@@ -54,22 +53,22 @@
 #+begin_src emacs-lisp
  
 (use-package try
-  :ensure t)
+  )
   
 #+end_src
 * which
 #+begin_src emacs-lisp
 (use-package which-key
-  :ensure t
+  
   :config (which-key-mode))  
 #+end_src
 * theme
 #+begin_src emacs-lisp
   (use-package zenburn-theme
-  :ensure t
+  
   :config (load-theme 'zenburn t))
   ;;   (use-package doom-themes
-  ;; :ensure t
+  ;; 
   ;; :config
   ;; ;; Global settings (defaults)
   ;; (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
@@ -98,7 +97,7 @@
   (setq org-startup-folded t)
   (add-hook 'org-mode-hook 'visual-line-mode)
   (use-package org-superstar
-  :ensure t
+  
   :config
   (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1))))
 
@@ -168,25 +167,24 @@
 ** company
 #+begin_src emacs-lisp
   (use-package company
-    :ensure t
+    
     :config
     (setq company-idle-delay 0)
     (setq company-minimum-prefix-length 1)
     (global-company-mode t)
     (add-hook 'after-init-hook 'global-company-mode))
   (use-package company-box
-    :ensure t
+    
     :hook (company-mode . company-box-mode))
   
 #+end_src
 ** navigation
 #+begin_src emacs-lisp
   (use-package counsel
-    :ensure t
+    
     )
 
   (use-package swiper
-    :ensure try
     :config
     (progn
       (ivy-mode 1)
@@ -218,24 +216,24 @@
 * pdf
 #+begin_src emacs-lisp
   (use-package pdf-tools
-    :ensure t
+    
     :config
     (pdf-tools-install))
 
   (use-package org-noter
-    :ensure t
+    
     :config)
   (use-package nov
-    :ensure t)
+    )
   (use-package djvu
-    :ensure t)
+    )
 
 #+end_src
 
 * magit
 #+begin_src emacs-lisp
    (use-package magit
-     :ensure t
+     
      :init
      (message "Loading Magit!")
      :config
@@ -246,7 +244,7 @@
 #+begin_src emacs-lisp
 
   (use-package projectile
-    :ensure t
+    
     :config
     (define-key projectile-mode-map (kbd "C-x p") 'projectile-command-map)
       (projectile-mode +1))  
@@ -255,20 +253,20 @@
 * flycheck
 #+begin_src emacs-lisp
   (use-package flycheck
-    :ensure t
+    
     :init (global-flycheck-mode))
 
 #+end_src
 * imenu-list
 #+begin_src emacs-lisp
   (use-package imenu-list
-    :ensure t)
+    )
   (global-set-key (kbd "C-'") #'imenu-list-smart-toggle)
 #+end_src
 * lsp mode
 #+begin_src emacs-lisp
   (use-package lsp-mode
-      :ensure t
+      
       :commands (lsp lsp-deferred)
       :init
       (setq lsp-keymap-prefix "C-x l" )  ;; Or 'C-l', 's-l'
@@ -284,27 +282,27 @@
   (setq read-process-output-max (* 1024 1024)) ;; 1mb
   (setq lsp-log-io nil)
   (use-package lsp-ui
-      :ensure t
+      
       :hook (lsp-mode . lsp-ui-mode)
       :custom
       (lsp-ui-doc-position 'bottom))
   (use-package lsp-treemacs
-    :ensure t
+    
     :after lsp)
   (lsp-treemacs-sync-mode 1)
   (use-package lsp-ivy
-    :ensure t)
+    )
 
 #+end_src
 * python
 #+begin_src emacs-lisp
   (use-package lsp-pyright
-    :ensure t
+    
     :hook (python-mode . (lambda()
 			   (require 'lsp-pyright)
 			   (lsp-deferred))))
     (use-package pyvenv
-    :ensure t
+    
     :config
     (pyvenv-mode t)
     ;; Set correct Python interpreter
@@ -320,7 +318,7 @@
     (add-hook 'prog-mode-hook #'lsp-deferred)
     (setq js-indent-level 2)
     (use-package typescript-mode
-    :ensure t)
+    )
 
   (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
   (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode))
@@ -328,7 +326,7 @@
 * dap
 #+begin_src emacs-lisp
   (use-package dap-mode
-    :ensure t
+    
     :config
     (dap-auto-configure-mode
      )
@@ -343,14 +341,14 @@
 * rainbow-delimiters
 #+begin_src emacs-lisp
     (use-package rainbow-delimiters
-    :ensure t
+    
     :hook (prog-mode . rainbow-delimiters-mode))
 
 #+end_src
 * yasnippet
 #+begin_src emacs-lisp
   (use-package yasnippet
-    :ensure t
+    
     :config
     (setq yas-snippet-dirs '("~/Dropbox/snippets"))
     (yas-global-mode 1)
@@ -359,7 +357,7 @@
 * anki
 #+begin_src emacs-lisp
   (use-package anki-editor
-    :ensure t
+    
     :after org
     :bind (:map org-mode-map
 	      ("<f12>" . anki-editor-cloze-region-auto-incr)
@@ -414,7 +412,7 @@
     (setq org-habit-show-habits-only-for-today nil)
     (setq org-agenda-repeating-timestamp-show-all nil)
     (use-package org-habit-stats
-	:ensure t)
+	)
     (define-key org-mode-map (kbd "C-c h") 'org-habit-stats-view-habit-at-point)
     (define-key org-agenda-mode-map (kbd "H") 'org-habit-stats-view-habit-at-point-agenda)
 
@@ -424,7 +422,7 @@
 * gptel
 #+begin_src emacs-lisp
   (use-package gptel
-    :ensure t
+    
     :config
     (setq gptel-api-key "AIzaSyAPRhQmrm6RdUfCKTk42bq0bkCQQJ25SKY"))
     ;; (add-hook 'gptel-post-stream-hook 'gptel-auto-scroll)
@@ -441,7 +439,7 @@
 * origami
 #+begin_src emacs-lisp
   ;; (use-package origami			;
-  ;;   :ensure t
+  ;;   
   ;;   :bind (:map origami-mode-map
   ;; 	  ("C-c C-f" . origami-forward-fold-same-level)
   ;; 	  ("C-c C-b" . origami-backward-fold-same-level)
