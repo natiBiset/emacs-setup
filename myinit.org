@@ -64,31 +64,31 @@
 #+end_src
 * theme
 #+begin_src emacs-lisp
-  (use-package zenburn-theme
-  
-  :config (load-theme 'zenburn t))
-  ;;   (use-package doom-themes
-  ;; 
-  ;; :config
-  ;; ;; Global settings (defaults)
-  ;; (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-  ;;       doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  ;; ;;(load-theme 'doom-one t)
-  ;; ;; (load-theme 'doom-lantern t)
-  ;; ;; (load-theme 'doom-tomorrow-night t)
+  ;; (use-package zenburn-theme
+
+  ;; :config (load-theme 'zenburn t))
+    (use-package doom-themes
+    :ensure t  
+  :config
+  ;; Global settings (defaults)
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+        doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  ;;(load-theme 'doom-one t)
+  ;; (load-theme 'doom-lantern t)
   ;; (load-theme 'doom-tomorrow-night t)
-  ;; ;; Enable flashing mode-line on errors
-  ;; (doom-themes-visual-bell-config)
-  ;; ;; Enable custom neotree theme (all-the-icons must be installed!)
-  ;; (doom-themes-neotree-config)
-  ;; ;; or for treemacs users
-  ;; (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
-  ;; (doom-themes-treemacs-config)
-  ;; ;; Corrects (and improves) org-mode's native fontification.
-  ;; (doom-themes-org-config))
-  ;; (use-package all-the-icons
-  ;;   :ensure t
-  ;;   )
+  (load-theme 'doom-tomorrow-night t)
+  ;; Enable flashing mode-line on errors
+  (doom-themes-visual-bell-config)
+  ;; Enable custom neotree theme (all-the-icons must be installed!)
+  (doom-themes-neotree-config)
+  ;; or for treemacs users
+  (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+  (doom-themes-treemacs-config)
+  ;; Corrects (and improves) org-mode's native fontification.
+  (doom-themes-org-config))
+  (use-package all-the-icons
+    :ensure t
+    )
 
 #+end_src
 * org mode
@@ -299,19 +299,21 @@
   (use-package lsp-pyright
     
     :hook (python-mode . (lambda()
-			   (require 'lsp-pyright)
-			   (lsp-deferred))))
+  			   (require 'lsp-pyright)
+  			   (lsp-deferred))))
     (use-package pyvenv
     
     :config
     (pyvenv-mode t)
     ;; Set correct Python interpreter
     (setq pyvenv-post-activate-hooks
-	  (list (lambda ()
-		  (setq python-shell-interpreter (concat pyvenv-virtual-env "bin/python3")))))
+  	  (list (lambda ()
+  		  (setq python-shell-interpreter (concat pyvenv-virtual-env "bin/python")))))
     (setq pyvenv-post-deactivate-hooks
-	  (list (lambda ()
-		  (setq python-shell-interpreter "python3")))))
+  	  (list (lambda ()
+  		  (setq python-shell-interpreter "python3")))))
+
+  (setq lsp-file-watch-ignore '("\\.pyc$" "venv" "__pycache__"))
 #+end_src
 * js
 #+begin_src emacs-lisp
@@ -484,5 +486,34 @@
  '(org-priority-faces '((65 . "tomato") (66 . "yellow") (67 . "blue")))
  '(package-selected-packages
    '(all-the-icons doom-themes typescript-mode tree-sitter-langs dap-mode dap origami pyvenv zenburn-theme yasnippet which-key undo-fu try sudo-edit rainbow-delimiters projectile powerline pdf-tools org-superstar org-noter org-habit-stats nov magit lsp-ui lsp-treemacs lsp-pyright lsp-ivy imenu-list gptel flycheck djvu counsel company-box anki-editor)))
+
+#+end_src
+* Treemacs
+#+begin_src emacs-lisp
+  (use-package treemacs
+    :defer t
+    :config
+    ;; Open Treemacs when a file in a project is opened
+    (defun my/open-treemacs-if-project ()
+      (when (and (projectile-project-p) (not (treemacs-get-local-window)))
+        (treemacs)
+        (treemacs-follow-mode 1)
+        (treemacs-filewatch-mode 1)
+        (treemacs-tag-follow-mode 1)))
+
+    (add-hook 'find-file-hook #'my/open-treemacs-if-project)
+
+    ;; Toggle Treemacs visibility (select window)
+    (global-set-key (kbd "C-c t") #'treemacs-select-window) ; <--- Changed line
+
+    (setq treemacs-width 35)      ;; Adjust as needed
+    (setq treemacs-show-hidden-files t)  ;; Show hidden files
+    (setq treemacs-git-mode 'extended)   ;; Show detailed Git status
+    )
+
+  (use-package lsp-treemacs
+    :after (lsp-mode treemacs)
+    :config
+    (lsp-treemacs-sync-mode 1))
 
 #+end_src
