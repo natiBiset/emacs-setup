@@ -82,7 +82,7 @@
   ;; Enable custom neotree theme (all-the-icons must be installed!)
   (doom-themes-neotree-config)
   ;; or for treemacs users
-  (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+  ;; (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
   (doom-themes-treemacs-config)
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
@@ -271,16 +271,20 @@
       :init
       (setq lsp-keymap-prefix "C-x l" )  ;; Or 'C-l', 's-l'
       :hook(
-	    (python-mode . lsp)
-	    (js2-mode . lsp)
-	    )
+  	    (python-mode . lsp)
+  	    (js2-mode . lsp)
+  	    )
       :config
       (lsp-enable-which-key-integration t))
-  (setq lsp-file-watch-threshold 2000)
+  (setq lsp-file-watch-threshold 500)
   (setq gc-cons-threshold 100000000)
+  (add-hook 'emacs-startup-hook
+          (lambda () (setq gc-cons-threshold 16777216)))
   ;; (add-hook 'prog-mode-hook #'lsp)
   (setq read-process-output-max (* 1024 1024)) ;; 1mb
   (setq lsp-log-io nil)
+  (setq lsp-auto-guess-root t)
+  (setq lsp-idle-delay 0.5)
   (use-package lsp-ui
       
       :hook (lsp-mode . lsp-ui-mode)
@@ -292,6 +296,10 @@
   (lsp-treemacs-sync-mode 1)
   (use-package lsp-ivy
     )
+  (use-package doom-modeline
+  :ensure t
+  :init (doom-modeline-mode 0))
+
 
 #+end_src
 * python
@@ -314,6 +322,7 @@
   		  (setq python-shell-interpreter "python3")))))
 
   (setq lsp-file-watch-ignore '("\\.pyc$" "venv" "__pycache__"))
+  (setq lsp-pyright-multi-root nil) 
 #+end_src
 * js
 #+begin_src emacs-lisp
@@ -490,30 +499,35 @@
 #+end_src
 * Treemacs
 #+begin_src emacs-lisp
-  (use-package treemacs
-    :defer t
-    :config
-    ;; Open Treemacs when a file in a project is opened
-    (defun my/open-treemacs-if-project ()
-      (when (and (projectile-project-p) (not (treemacs-get-local-window)))
-        (treemacs)
-        (treemacs-follow-mode 1)
-        (treemacs-filewatch-mode 1)
-        (treemacs-tag-follow-mode 1)))
+  ;; (use-package treemacs
+  ;;   :defer t
+  ;;   :config
+  ;;   ;; Open Treemacs when a file in a project is opened
+  ;;   (defun my/open-treemacs-if-project ()
+  ;;     (when (and (projectile-project-p) (not (treemacs-get-local-window)))
+  ;;       (treemacs)
+  ;;       (treemacs-follow-mode 1)
+  ;;       (treemacs-filewatch-mode 1)
+  ;;       (treemacs-tag-follow-mode 1)))
 
-    (add-hook 'find-file-hook #'my/open-treemacs-if-project)
+  ;;   (add-hook 'find-file-hook #'my/open-treemacs-if-project)
 
-    ;; Toggle Treemacs visibility (select window)
-    (global-set-key (kbd "C-c t") #'treemacs-select-window) ; <--- Changed line
+  ;;   ;; Toggle Treemacs visibility (select window)
+  ;;   (global-set-key (kbd "C-c t") #'treemacs-select-window) ; <--- Changed line
 
-    (setq treemacs-width 35)      ;; Adjust as needed
-    (setq treemacs-show-hidden-files t)  ;; Show hidden files
-    (setq treemacs-git-mode 'extended)   ;; Show detailed Git status
-    )
+  ;;   (setq treemacs-width 35)      ;; Adjust as needed
+  ;;   (setq treemacs-show-hidden-files t)  ;; Show hidden files
+  ;;   (setq treemacs-git-mode 'extended)   ;; Show detailed Git status
+  ;;   )
 
-  (use-package lsp-treemacs
-    :after (lsp-mode treemacs)
-    :config
-    (lsp-treemacs-sync-mode 1))
+  ;; (use-package lsp-treemacs
+  ;;   :after (lsp-mode treemacs)
+  ;;   :config
+  ;;   (lsp-treemacs-sync-mode 1))
+
+#+end_src
+* esup
+#+begin_src emacs-lisp
+(use-package esup)
 
 #+end_src
